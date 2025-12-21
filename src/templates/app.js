@@ -2,6 +2,7 @@ export const getMainTs = (title) => {
     const safeTitle = title.replace(/'/g, "\\'");
     return `
 import { Devvit } from '@devvit/public-api';
+import type { Context } from '@devvit/public-api';
 
 // 1. Configure Devvit
 Devvit.configure({
@@ -12,9 +13,8 @@ Devvit.configure({
 // 2. Database & Bridge Helper
 const DB_REGISTRY_KEY = 'sys:registry';
 
-async function handleWebviewMessage(msg: any, context: any) {
+async function handleWebviewMessage(msg: any, context: Context) {
     const { redis, ui } = context;
-    // msg structure: { type, collection, key, value }
     
     try {
         if (msg.type === 'save') {
@@ -31,7 +31,6 @@ async function handleWebviewMessage(msg: any, context: any) {
                 value: value ? JSON.parse(value) : null
             });
         } else if (msg.type === 'init') {
-            // Fetch all data
             const collections = await redis.zRange(DB_REGISTRY_KEY, 0, -1);
             const dbData: any = {};
             await Promise.all(collections.map(async (item: any) => {
@@ -44,7 +43,6 @@ async function handleWebviewMessage(msg: any, context: any) {
                 dbData[colName] = parsed;
             }));
             
-            // Get User
             let user = null;
             try {
                 const currUser = await context.reddit.getCurrentUser();
@@ -117,9 +115,8 @@ Devvit.addMenuItem({
 // 5. Install Trigger
 Devvit.addTrigger({
   event: 'AppInstall',
-  onEvent: async (event, context) => {
+  onEvent: async (_event, context) => {
     console.log('App installed successfully!');
-    context.ui.showToast({ text: 'Game installed! Use the menu to add a game post.' });
   },
 });
 

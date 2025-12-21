@@ -34,7 +34,7 @@ export const generatePackageJson = (slug, dependencies = {}, devDependencies = {
 }, null, 2);
 
 export const generateDevvitJson = (slug) => JSON.stringify({
-  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "$schema": "https://developers.reddit.com/schema/devvit-plugin.v1.json",
   "name": slug,
   "webview": {
     "dir": "dist/client",
@@ -152,7 +152,7 @@ export default defineConfig({
     noExternal: true,
   },
   build: {
-    ssr: 'index.ts',
+    ssr: 'index.tsx',
     outDir: '../../dist/server',
     target: 'node22',
     sourcemap: true,
@@ -165,6 +165,11 @@ export default defineConfig({
         inlineDynamicImports: true,
       },
     },
+  },
+  esbuild: {
+    jsx: 'transform',
+    jsxFactory: 'Devvit.createElement',
+    jsxFragment: 'Devvit.Fragment',
   },
 });
 `;

@@ -107,7 +107,7 @@ export { Player } from '@remotion/player';
 
     // 4. Server Folder (src/server)
     const serverFolder = srcFolder.folder("server");
-    serverFolder.file("index.ts", getMainTs(projectTitle));
+    serverFolder.file("index.tsx", getMainTs(projectTitle));
     serverFolder.file("vite.config.ts", generateServerViteConfig());
     
     const blob = await zip.generateAsync({ type: "blob" });
